@@ -2,7 +2,10 @@
 var conf = require('./conf');
 var sources = require('./sources');
 if (sources.length==0) {console.log('No sources found.');}
+var clc = require('cli-color');
 var request = require('request');
+
+console.log(clc.whiteBright.bold('news')+clc.bgWhiteBright.black.bold('STREAM'));
 
 function getArticles(source) {
   return new Promise((resolve, reject) => {
@@ -22,20 +25,30 @@ function getArticles(source) {
   });
 }
 
-sources.sort((a, b) => {
-  if (a.name.toUpperCase() < b.name.toUpperCase()) {
-    return -1;
-  }
-  if (a.name.toUpperCase() > b.name.toUpperCase()) {
-    return 1;
-  }
-  return 0;
-});
+var articles = [];
+var collection = [];
 
 sources.map((source) => {
-  getArticles(source.id).then((articles) => {
-    articles.map((article) => {
-      console.log(article.publishedAt, "/ "+source.name+" -", article.title);
-    }); 
+  let promise = getArticles(source.id).then((artls) => {
+    artls.map((article) => {
+      articles.push(article);
+    });
   }).catch((error) => {});
+  collection.push(promise);
 });
+
+Promise.all(collection).then(() => {
+  articles.sort((a, b) => {
+    if (a.publishedAt < b.publishedAt) {
+      return -1;
+    }
+    if (a.publishedAt > b.publishedAt) {
+      return 1;
+    }
+    return 0;
+  });
+  articles.map((article) => {
+    let time = article.publishedAt.substring(0,19);
+    console.log(clc.cyan(time)+" / "+article.title);
+  });
+}).catch((error) => {});

@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/implose/streamnews#readme",
   "dependencies": {
+    "cli-color": "^1.2.0",
     "request": "^2.83.0"
   }
 }

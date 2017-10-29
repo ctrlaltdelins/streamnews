@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var conf = require('./conf');
 var request = require('request');
+var clc = require('cli-color');
 var fs = require("fs");
 
 function retrieveSources(filters="") {
@@ -30,7 +31,7 @@ if(!conf.filterSources){
   console.log("Getting all the sources...");
   retrieveSources().then((sources) => {
     fs.writeFile("sources.json", JSON.stringify(sources), (err) => {
-      if(!err){console.log(sources.length + ' sources retrieved.');}
+      if(!err){console.log(clc.green(sources.length + ' sources retrieved.'));}
       else{console.log('Error:',err);}
     });
   });
@@ -52,8 +53,8 @@ if(!conf.filterSources){
 
   Promise.all(collection).then(() => {
     fs.writeFile("sources.json", JSON.stringify(src), (err) => {
-      if(!err){console.log(src.length + ' sources retrieved.');}
+      if(!err){console.log(clc.green(src.length + ' sources retrieved.'));}
       else{console.log('Error:',err);}
     });
-  });
+  }).catch((error) => {});
 }
