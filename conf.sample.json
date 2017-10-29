@@ -5,6 +5,6 @@
   "filters":{
     "categories":["business", "entertainment", "gaming", "general", "music", "politics", "science-and-nature", "sport", "technology"],
     "languages":["en", "de", "fr"],
-    "countries":["au","de", "gb", "in", "it", "us"]
+    "countries":["au", "de", "gb", "in", "it", "us"]
   }
 }

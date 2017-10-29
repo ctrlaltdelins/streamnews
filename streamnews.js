@@ -4,6 +4,24 @@ var sources = require('./sources');
 if (sources.length==0) {console.log('No sources found.');}
 var request = require('request');
 
+function getArticles(source) {
+  return new Promise((resolve, reject) => {
+    request({
+      uri: "https://newsapi.org/v1/articles?source="+source+"&sortBy=latest"+"&apiKey="+conf.api_key,
+      method: "GET",
+      timeout: 10000,
+      followRedirect: false
+    },(error, response, body) => {
+      if(!error){
+        var artl = JSON.parse(body).articles;
+        resolve(artl);
+      }else{
+        reject(error);
+      }
+    });
+  });
+}
+
 sources.sort((a, b) => {
   if (a.name.toUpperCase() < b.name.toUpperCase()) {
     return -1;
@@ -15,5 +33,9 @@ sources.sort((a, b) => {
 });
 
 sources.map((source) => {
-  console.log(source.name);
+  getArticles(source.id).then((articles) => {
+    articles.map((article) => {
+      console.log(article.publishedAt, "/ "+source.name+" -", article.title);
+    }); 
+  }).catch((error) => {});
 });
