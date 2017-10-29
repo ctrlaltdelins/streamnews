@@ -15,3 +15,6 @@ npm install -g streamnews
 then just type `streamnews`
 
 And voilà.
+
+
+powered by newsapi.org
