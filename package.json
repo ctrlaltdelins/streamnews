@@ -1,0 +1,25 @@
+{
+  "name": "streamnews",
+  "version": "1.0.0",
+  "description": "Stream news",
+  "bin": "./streamnews.js",
+  "preferGlobal": true,
+  "main": "streamnews.js",
+  "scripts": {
+    "start": "node streamnews.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/implose/streamnews.git"
+  },
+  "keywords": [
+    "news"
+  ],
+  "author": "Yorick <yorick@implo.se>",
+  "license": "Beerware",
+  "bugs": {
+    "url": "https://github.com/implose/streamnews/issues"
+  },
+  "homepage": "https://github.com/implose/streamnews#readme"
+}
