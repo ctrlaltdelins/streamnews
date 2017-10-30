@@ -11,6 +11,10 @@ installation
 ``` sh
 npm install -g streamnews
 ```
+Then customize conf.json:
+``` sh
+sudo cp /usr/lib/node_modules/streamnews/conf.sample.json /usr/lib/node_modules/streamnews/conf.json && sudo vi /usr/lib/node_modules/streamnews/conf.json
+```
 
 then just type `streamnews`
 

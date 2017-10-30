@@ -1,12 +1,12 @@
 {
   "name": "streamnews",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Stream news",
   "bin": "./streamnews.js",
   "preferGlobal": true,
   "main": "streamnews.js",
   "scripts": {
-    "postinstall": "node getsources.js",
+    "postinstall": "echo 'Please, customize conf.json before using streamnews'",
     "prestart": "node getsources.js",
     "start": "node streamnews.js",
     "test": "echo \"Error: no test specified\" && exit 1"
