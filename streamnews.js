@@ -4,6 +4,9 @@ var sources = require('./sources');
 if (sources.length==0) {console.log('No sources found.');}
 var clc = require('cli-color');
 var request = require('request');
+var Datastore = require('nedb');
+var db = new Datastore();
+var sha1 = require('sha1');
 
 console.log(clc.whiteBright.bold('news')+clc.bgWhiteBright.black.bold('STREAM'));
 
@@ -31,7 +34,19 @@ var collection = [];
 sources.map((source) => {
   let promise = getArticles(source.id).then((artls) => {
     artls.map((article) => {
-      articles.push(article);
+
+      let uparticle = {
+        _id: sha1(article.publishedAt.substring(0,19)+article.title+source.name),
+        author: article.author,
+        source: source.name,
+        title: article.title,
+        description: article.description,
+        url: article.url,
+        publishedAt: article.publishedAt.substring(0,19)
+      };
+
+      articles.push(uparticle);
+      db.insert(uparticle, (err) => {});
     });
   }).catch((error) => {});
   collection.push(promise);
@@ -48,7 +63,7 @@ Promise.all(collection).then(() => {
     return 0;
   });
   articles.map((article) => {
-    let time = article.publishedAt.substring(0,19);
-    console.log(clc.cyan(time)+" / "+article.title);
+    let time = article.publishedAt;
+    console.log(clc.cyan(time)+" / "+clc.green(article.source)+" / "+article.title);
   });
 }).catch((error) => {});
