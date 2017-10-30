@@ -16,7 +16,7 @@ function getArticles(source) {
     request({
       uri: "https://newsapi.org/v1/articles?source="+source+"&sortBy=latest"+"&apiKey="+conf.api_key,
       method: "GET",
-      timeout: 10000,
+      timeout: 1000,
       followRedirect: false
     },(error, response, body) => {
       if(!error){

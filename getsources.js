@@ -9,7 +9,7 @@ function retrieveSources(filters="") {
     request({
       uri: "https://newsapi.org/v1/sources"+filters,
       method: "GET",
-      timeout: 10000,
+      timeout: 3000,
       followRedirect: false
     },(error, response, body) => {
       if(!error){
