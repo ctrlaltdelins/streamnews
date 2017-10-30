@@ -7,6 +7,7 @@ var request = require('request');
 var Datastore = require('nedb');
 var db = new Datastore();
 var sha1 = require('sha1');
+var latest;
 
 console.log(clc.whiteBright.bold('news')+clc.bgWhiteBright.black.bold('STREAM'));
 
@@ -26,6 +27,49 @@ function getArticles(source) {
       }
     });
   });
+}
+
+function continuousRetrieval () {
+  setInterval(() => {
+    var articles = [];
+    var collection = [];
+    
+    sources.map((source) => {
+      let promise = getArticles(source.id).then((artls) => {
+        artls.map((article) => {
+    
+          let uparticle = {
+            _id: sha1(article.publishedAt.substring(0,19)+article.title+source.name),
+            author: article.author,
+            source: source.name,
+            title: article.title,
+            description: article.description,
+            url: article.url,
+            publishedAt: article.publishedAt.substring(0,19)
+          };
+    
+          articles.push(uparticle);
+          db.insert(uparticle, (err) => {});
+        });
+      }).catch((error) => {});
+      collection.push(promise);
+    });
+    
+    Promise.all(collection).then(() => {
+      db.find({}).sort({ publishedAt: -1 }).limit(10).exec(function (err, dataset) {
+        dataset.map((data) => {
+          if (latest.id != data._id && data.publishedAt > latest.publishedAt) {
+            console.log(clc.cyan(data.publishedAt)+" / "+clc.green(data.source)+" / "+data.title);
+            latest = {
+              id: data._id,
+              publishedAt: data.publishedAt
+            };
+          }
+        });
+      });
+    }).catch((error) => {});
+  
+  },5000);
 }
 
 var articles = [];
@@ -63,7 +107,11 @@ Promise.all(collection).then(() => {
     return 0;
   });
   articles.map((article) => {
-    let time = article.publishedAt;
-    console.log(clc.cyan(time)+" / "+clc.green(article.source)+" / "+article.title);
+    console.log(clc.cyan(article.publishedAt)+" / "+clc.green(article.source)+" / "+article.title);
+    latest = {
+      id: article._id,
+      publishedAt: article.publishedAt
+    };
   });
+  continuousRetrieval();
 }).catch((error) => {});
