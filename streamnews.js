@@ -1,27 +1,25 @@
 #!/usr/bin/env node
 var conf = require('./conf');
-var sources = require('./sources');
-if (sources.length==0) {console.log('No sources found.');}
 var clc = require('cli-color');
 var request = require('request');
 var Datastore = require('nedb');
-var db = new Datastore();
+var db = {};
+db.sources = new Datastore();
+db.articles = new Datastore();
 var sha1 = require('sha1');
-var latest;
+var latest = {id: null, publishedAt: ''};
 
-console.log(clc.whiteBright.bold('news')+clc.bgWhiteBright.black.bold('STREAM'));
-
-function getArticles(source) {
+function requestSources(filters="") {
   return new Promise((resolve, reject) => {
     request({
-      uri: "https://newsapi.org/v1/articles?source="+source+"&sortBy=latest"+"&apiKey="+conf.api_key,
+      uri: "https://newsapi.org/v1/sources"+filters,
       method: "GET",
-      timeout: 1000,
+      timeout: 10000,
       followRedirect: false
     },(error, response, body) => {
       if(!error){
-        var artl = JSON.parse(body).articles;
-        resolve(artl);
+        var src = JSON.parse(body).sources;
+        resolve(src);
       }else{
         reject(error);
       }
@@ -29,89 +27,116 @@ function getArticles(source) {
   });
 }
 
-function continuousRetrieval () {
-  setInterval(() => {
-    var articles = [];
-    var collection = [];
-    
-    sources.map((source) => {
-      let promise = getArticles(source.id).then((artls) => {
-        artls.map((article) => {
-    
-          let uparticle = {
-            _id: sha1(article.publishedAt.substring(0,19)+article.title+source.name),
-            author: article.author,
-            source: source.name,
-            title: article.title,
-            description: article.description,
-            url: article.url,
-            publishedAt: article.publishedAt.substring(0,19)
-          };
-    
-          articles.push(uparticle);
-          db.insert(uparticle, (err) => {});
-        });
-      }).catch((error) => {});
-      collection.push(promise);
+function requestArticles(source) {
+  return new Promise((resolve, reject) => {
+    request({
+      uri: "https://newsapi.org/v1/articles?source="+source+"&sortBy=latest"+"&apiKey="+conf.api_key,
+      method: "GET",
+      timeout: 10000,
+      followRedirect: false
+    },(error, response, body) => {
+      if(!error){
+        resolve(JSON.parse(body).articles);
+      }else{
+        reject(error);
+      }
     });
-    
-    Promise.all(collection).then(() => {
-      db.find({}).sort({ publishedAt: -1 }).limit(10).exec(function (err, dataset) {
-        dataset.map((data) => {
-          if (latest.id != data._id && data.publishedAt > latest.publishedAt) {
-            console.log(clc.cyan(data.publishedAt)+" / "+clc.green(data.source)+" / "+data.title);
-            latest = {
-              id: data._id,
-              publishedAt: data.publishedAt
-            };
-          }
-        });
-      });
-    }).catch((error) => {});
-  
-  },5000);
+  });
 }
 
-var articles = [];
-var collection = [];
+function getSources () {
+  return new Promise((resolve, reject) => {
 
-sources.map((source) => {
-  let promise = getArticles(source.id).then((artls) => {
-    artls.map((article) => {
+    var collection = [];
+    if(!conf.filterSources){
+      console.log("Getting all the sources...");
+      let promise = requestSources().then((sources) => {
+        sources.map((source) => {
+          db.sources.insert(source, (err, success) => { if(err) {console.log(err);} });
+        });
+      }).catch((error) => { reject(error); });
+      collection.push(promise);
+    }else{
+      console.log("Getting sources based on filters in conf.json...");
+      conf.filters.languages.map((lang) => {
+        conf.filters.countries.map((country) => {
+          conf.filters.categories.map((category) => {
+            let promise = requestSources("?language="+lang+"&country="+country+"&category="+category).then((sources)=>{
+              sources.map((source) => {
+                db.sources.insert(source, (err, success) => { if(err) {console.log(err);} });
+              });
+            }).catch((error) => { reject(error); });
+            collection.push(promise);
+          });
+        });
+      });
+    }
 
-      let uparticle = {
-        _id: sha1(article.publishedAt.substring(0,19)+article.title+source.name),
-        author: article.author,
-        source: source.name,
-        title: article.title,
-        description: article.description,
-        url: article.url,
-        publishedAt: article.publishedAt.substring(0,19)
-      };
+    Promise.all(collection).then(() => {
+      resolve();
+    }).catch((error) => { reject(error); });
 
-      articles.push(uparticle);
-      db.insert(uparticle, (err) => {});
+  });
+}
+
+function retrieveArticles (sources) {
+  var collection = [];
+
+  sources.map((source) => {
+    let promise = requestArticles(source.id).then((artls) => {
+      if (artls) {
+        artls.map((article) => {
+          if (article.author && article.publishedAt && article.title && article.url) {
+            let uparticle = {
+              _id: sha1(article.publishedAt.substring(0, 19) + article.title + source.name),
+              author: article.author,
+              source: source.name,
+              title: article.title,
+              description: article.description,
+              url: article.url,
+              publishedAt: article.publishedAt.substring(0, 19)
+            };
+            db.articles.insert(uparticle, (err, success) => {
+              if (!err) {
+                latest = {
+                  id: success._id,
+                  publishedAt: success.publishedAt
+                };
+              }
+            });
+          }
+        });
+      }
+    }).catch((error) => { console.warn(error); });
+    collection.push(promise);
+  });
+
+  Promise.all(collection).then(() => {
+    displayArticles();
+  }).catch((error) => { console.warn(error); });
+}
+
+function displayArticles () {
+  db.articles.find({}).sort({ publishedAt: -1 }).limit(50).exec(function (err, dataset) {
+    dataset.reverse().map((data) => {
+      if (data._id != latest.id && data.publishedAt >= latest.publishedAt) {
+        console.log(clc.cyan(data.publishedAt) + " / " + clc.green(data.source) + " / " + data.title);
+        latest = {
+          id: data._id,
+          publishedAt: data.publishedAt
+        };
+      }
     });
-  }).catch((error) => {});
-  collection.push(promise);
-});
+  });
 
-Promise.all(collection).then(() => {
-  articles.sort((a, b) => {
-    if (a.publishedAt < b.publishedAt) {
-      return -1;
-    }
-    if (a.publishedAt > b.publishedAt) {
-      return 1;
-    }
-    return 0;
-  });
-  articles.map((article) => {
-    console.log(clc.cyan(article.publishedAt)+" / "+clc.green(article.source)+" / "+article.title);
-    latest = {
-      id: article._id,
-      publishedAt: article.publishedAt
-    };
-  });
-  continuousRetrieval();
-}).catch((error) => {});
+}
+
+getSources().then(() => {
+  console.log('Sources retrieved.');
+  console.log(clc.whiteBright.bold('stream') + clc.bgWhiteBright.black.bold('NEWS'));
+  setInterval(() => {
+    db.sources.find({}).exec(function (err, dataset) {
+      retrieveArticles(dataset);
+    });
+  }, 5000);
+}).catch((error) => { console.warn(error); });

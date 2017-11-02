@@ -1,0 +1,12 @@
+v1.1.0
+
+* fixed an error preventing streamnews to write the sources to a file
+* added contributing guidelines
+
+v1.0.1
+
+* fixed an error occuring in postinstall
+
+v1.0.0
+
+* published everything to npm : streamnews
