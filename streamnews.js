@@ -7,7 +7,7 @@ var db = {};
 db.sources = new Datastore();
 db.articles = new Datastore();
 var sha1 = require('sha1');
-var latest = {id: null, publishedAt: ''};
+var latest = {id: null, index: 0, publishedAt: ''};
 
 function requestSources(filters="") {
   return new Promise((resolve, reject) => {
@@ -81,7 +81,7 @@ function getSources () {
 
 function retrieveArticles (sources) {
   var collection = [];
-
+  var articles = [];
   sources.map((source) => {
     let promise = requestArticles(source.id).then((artls) => {
       if (artls) {
@@ -96,14 +96,7 @@ function retrieveArticles (sources) {
               url: article.url,
               publishedAt: article.publishedAt.substring(0, 19)
             };
-            db.articles.insert(uparticle, (err, success) => {
-              if (!err) {
-                latest = {
-                  id: success._id,
-                  publishedAt: success.publishedAt
-                };
-              }
-            });
+            articles.push(uparticle);
           }
         });
       }
@@ -112,6 +105,19 @@ function retrieveArticles (sources) {
   });
 
   Promise.all(collection).then(() => {
+    articles.sort((a, b) => {
+      if (a.publishedAt < b.publishedAt) { return -1; }
+      if (a.publishedAt > b.publishedAt) { return 1; }
+      return 0;
+    });
+    let latestindex = latest.index;
+    articles.map((article) => {
+      latestindex++;
+      article.index = latestindex;
+      db.articles.insert(article, (err, success) => { });
+    });
+    
+  }).then(() => {
     displayArticles();
   }).catch((error) => { console.warn(error); });
 }
@@ -119,10 +125,11 @@ function retrieveArticles (sources) {
 function displayArticles () {
   db.articles.find({}).sort({ publishedAt: -1 }).limit(50).exec(function (err, dataset) {
     dataset.reverse().map((data) => {
-      if (data._id != latest.id && data.publishedAt >= latest.publishedAt) {
+      if (data._id != latest.id && data.publishedAt >= latest.publishedAt && data.index > latest.index) {
         console.log(clc.cyan(data.publishedAt) + " / " + clc.green(data.source) + " / " + data.title);
         latest = {
           id: data._id,
+          index: data.index,
           publishedAt: data.publishedAt
         };
       }
