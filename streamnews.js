@@ -125,7 +125,7 @@ function retrieveArticles (sources) {
 function displayArticles () {
   db.articles.find({}).sort({ publishedAt: -1 }).limit(50).exec(function (err, dataset) {
     dataset.reverse().map((data) => {
-      if (data._id != latest.id && data.publishedAt >= latest.publishedAt && data.index > latest.index) {
+      if (data._id != latest.id && data.index > latest.index) {
         console.log(clc.cyan(data.publishedAt) + " / " + clc.green(data.source) + " / " + data.title);
         latest = {
           id: data._id,
