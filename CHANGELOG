@@ -1,3 +1,8 @@
+v1.1.1
+
+* fixed an issue where articles with a published date in the future prevented from pulling new articles until that date was past
+* cleaner output
+
 v1.1.0
 
 * fixed an error preventing streamnews to write the sources to a file
