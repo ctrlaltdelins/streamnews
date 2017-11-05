@@ -1,3 +1,23 @@
 {
-  "api_key":""
+  "api_key":"",
+  "filter": false,
+  "filters": {
+    "lang": [
+      "ara",
+      "cat",
+      "deu",
+      "eng",
+      "fra",
+      "hrv",
+      "ind",
+      "ita",
+      "por",
+      "rus",
+      "slv",
+      "spa",
+      "srp",
+      "tur",
+      "zho"
+    ]
+  }
 }
