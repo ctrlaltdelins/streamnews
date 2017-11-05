@@ -1,24 +1,18 @@
 [![npm](https://img.shields.io/npm/v/streamnews.svg?style=flat-square)](https://www.npmjs.com/package/streamnews)
-[![licence](https://img.shields.io/npm/l/streamnews.svg?style=flat-square)](https://github.com/implose/streamnews/blob/master/LICENCE.md)
-[![GitHub tag](https://img.shields.io/github/tag/implose/streamnews.svg?style=flat-square)](https://github.com/implose/streamnews/tags)
-[![GitHub release](https://img.shields.io/github/release/implose/streamnews.svg?style=flat-square)](https://github.com/implose/streamnews/releases)
+[![licence](https://img.shields.io/npm/l/streamnews.svg?style=flat-square)](https://github.com/ctrlaltdelins/streamnews/blob/master/LICENCE.md)
+[![GitHub tag](https://img.shields.io/github/tag/ctrlaltdelins/streamnews.svg?style=flat-square)](https://github.com/ctrlaltdelins/streamnews/tags)
+[![GitHub release](https://img.shields.io/github/release/ctrlaltdelins/streamnews.svg?style=flat-square)](https://github.com/ctrlaltdelins/streamnews/releases)
 [![I love badges](https://img.shields.io/badge/I%20love-badges-FF00FF.svg?style=flat-square)](https://shields.io)
 
 ### streamnews
-To stream news in a terminal.
+Stream news in a terminal.
 
-installation
-``` sh
-npm install -g streamnews
-```
-Then customize conf.json:
-``` sh
-sudo cp /usr/lib/node_modules/streamnews/conf.sample.json /usr/lib/node_modules/streamnews/conf.json && sudo vi /usr/lib/node_modules/streamnews/conf.json
-```
+Installation: `npm install -g streamnews` or `yarn global install streamnews`
 
-then just type `streamnews`
+Get your API KEY at https://eventregistry.org
+
+Then customize conf.json: `sudo vi /usr/lib/node_modules/streamnews/conf.json`
+
+Then just type `streamnews`
 
 And voilà.
-
-
-powered by newsapi.org

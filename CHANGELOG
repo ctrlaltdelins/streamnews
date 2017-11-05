@@ -1,3 +1,7 @@
+v2.0.0
+
+* changed from newsapi.org to eventregistry.org as source of the news API
+
 v1.1.1
 
 * fixed an issue where articles with a published date in the future prevented from pulling new articles until that date was past
