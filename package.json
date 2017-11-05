@@ -1,6 +1,6 @@
 {
   "name": "streamnews",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Stream news",
   "bin": "./streamnews.js",
   "preferGlobal": true,
@@ -11,21 +11,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/implose/streamnews.git"
+    "url": "git+https://github.com/ctrlaltdelins/streamnews.git"
   },
   "keywords": [
     "news"
   ],
-  "author": "Yorick <yorick@implo.se>",
+  "author": "Yorick <yorick@ctrlaltdelins.xyz>",
   "license": "Beerware",
   "bugs": {
-    "url": "https://github.com/implose/streamnews/issues"
+    "url": "https://github.com/ctrlaltdelins/streamnews/issues"
   },
-  "homepage": "https://github.com/implose/streamnews#readme",
+  "homepage": "https://github.com/ctrlaltdelins/streamnews#readme",
   "dependencies": {
     "cli-color": "^1.2.0",
     "nedb": "^1.8.0",
-    "request": "^2.83.0",
-    "sha1": "^1.1.1"
+    "request": "^2.83.0"
   }
 }
