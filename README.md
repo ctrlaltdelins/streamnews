@@ -9,10 +9,10 @@ Stream news in a terminal.
 
 Installation: `npm install -g streamnews` or `yarn global install streamnews`
 
-Get your API KEY at https://eventregistry.org
-
-Then customize conf.json: `sudo vi /usr/lib/node_modules/streamnews/conf.json`
-
-Then just type `streamnews`
+* Get your API KEY at https://eventregistry.org
+* Customize conf.json: `sudo vi PATHTOYOURGLOBALNODE_MODULESDIR/streamnews/conf.json`
+* Type `streamnews`
 
 And voilà.
+
+If you want to filter by languages (english by default), change filters to true in conf.json, and remove the languages you don't want - /!\ you can't retrieve articles in more than 3 languages with the free eventregistry account.
