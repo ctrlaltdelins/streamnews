@@ -1,6 +1,6 @@
 {
   "name": "streamnews",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Stream news",
   "bin": "./streamnews.js",
   "preferGlobal": true,
