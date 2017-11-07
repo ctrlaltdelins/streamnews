@@ -1,7 +1,7 @@
 [![npm](https://img.shields.io/npm/v/streamnews.svg?style=flat-square)](https://www.npmjs.com/package/streamnews)
-[![licence](https://img.shields.io/npm/l/streamnews.svg?style=flat-square)](https://github.com/ctrlaltdelins/streamnews/blob/master/LICENCE.md)
-[![GitHub tag](https://img.shields.io/github/tag/ctrlaltdelins/streamnews.svg?style=flat-square)](https://github.com/ctrlaltdelins/streamnews/tags)
-[![GitHub release](https://img.shields.io/github/release/ctrlaltdelins/streamnews.svg?style=flat-square)](https://github.com/ctrlaltdelins/streamnews/releases)
+[![licence](https://img.shields.io/npm/l/streamnews.svg?style=flat-square)](https://github.com/ctrlaltdev/streamnews/blob/master/LICENCE.md)
+[![GitHub tag](https://img.shields.io/github/tag/ctrlaltdev/streamnews.svg?style=flat-square)](https://github.com/ctrlaltdev/streamnews/tags)
+[![GitHub release](https://img.shields.io/github/release/ctrlaltdev/streamnews.svg?style=flat-square)](https://github.com/ctrlaltdev/streamnews/releases)
 [![I love badges](https://img.shields.io/badge/I%20love-badges-FF00FF.svg?style=flat-square)](https://shields.io)
 
 ### streamnews
