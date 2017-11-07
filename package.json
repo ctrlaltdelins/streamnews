@@ -11,17 +11,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ctrlaltdelins/streamnews.git"
+    "url": "git+https://github.com/ctrlaltdev/streamnews.git"
   },
   "keywords": [
     "news"
   ],
-  "author": "Yorick <yorick@ctrlaltdelins.xyz>",
+  "author": "Yorick <yorick@ctrlaltdev.xyz>",
   "license": "CC BY-NC-SA 4.0",
   "bugs": {
-    "url": "https://github.com/ctrlaltdelins/streamnews/issues"
+    "url": "https://github.com/ctrlaltdev/streamnews/issues"
   },
-  "homepage": "https://github.com/ctrlaltdelins/streamnews#readme",
+  "homepage": "https://github.com/ctrlaltdev/streamnews#readme",
   "dependencies": {
     "cli-color": "^1.2.0",
     "nedb": "^1.8.0",
