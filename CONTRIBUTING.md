@@ -4,18 +4,18 @@ If you're crazy enough to voluntarily contribute to this, help yourself:
 
 Fork, then clone the repo:
 
-    git clone git@github.com:implose/streamnews.git
+    git clone git@github.com:ctrlaltdev/newstream.git
 
 You'll need node and npm (or yarn), when both installed:
 
-    npm install
+    npm install or yarn install
 
 And finally, to ensure the safety of the rest of humanity:
 
-    git checkout develop
+    git checkout dev
 
 Do your magic, but please respect a clean [git flow][gflow], here are the settings I use:
-[gflow]: https://github.com/implose/streamnews/blob/master/GFLOW.md
+[gflow]: https://github.com/ctrlaltdev/newstream/blob/master/GFLOW.md
 - branch for production: master (so don't use that)
 - branch for development: develop (please use that)
 - feature branch prefix: feature/
@@ -27,7 +27,7 @@ Do your magic, but please respect a clean [git flow][gflow], here are the settin
 
 Push to your fork and [submit a pull request][pr].
 
-[pr]: https://github.com/implose/streamnews/compare/
+[pr]: https://github.com/ctrlaltdev/newstream/compare/
 
 At this point you're waiting on me. And 2 possibilities: Cthulhu awakes and I'll never review your PR, or I do someday and accept it / request changes / curse it during a black ritual.
 

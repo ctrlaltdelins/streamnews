@@ -1,30 +1,33 @@
 {
-  "name": "streamnews",
-  "version": "2.0.1",
-  "description": "Stream news",
-  "bin": "./streamnews.js",
+  "name": "newstream",
+  "version": "3.0.0",
+  "description": "Stream News",
+  "bin": "./newstream.js",
   "preferGlobal": true,
-  "main": "streamnews.js",
+  "main": "newstream.js",
   "scripts": {
-    "postinstall": "echo \"Please, customize conf.json before using streamnews\"",
-    "start": "node streamnews.js"
+    "start": "node newstream.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ctrlaltdev/streamnews.git"
+    "url": "git+https://github.com/ctrlaltdev/newstream.git"
   },
   "keywords": [
-    "news"
+    "news",
+    "cli",
+    "rss",
+    "feed"
   ],
   "author": "Yorick <yorick@ctrlaltdev.xyz>",
-  "license": "CC BY-NC-SA 4.0",
+  "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/ctrlaltdev/streamnews/issues"
+    "url": "https://github.com/ctrlaltdev/newstream/issues"
   },
-  "homepage": "https://github.com/ctrlaltdev/streamnews#readme",
+  "homepage": "https://github.com/ctrlaltdev/newstream#readme",
   "dependencies": {
-    "cli-color": "^1.2.0",
-    "nedb": "^1.8.0",
+    "colors": "^1.1.2",
+    "feedparser": "^2.2.9",
+    "optimist": "^0.6.1",
     "request": "^2.83.0"
   }
 }
