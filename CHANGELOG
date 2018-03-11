@@ -1,9 +1,8 @@
 v3.0.0
 
 * changed licence to MPL-2.0
-* changed news retrieval to own solution
 * changed name to newstream
-* pet a cat
+* switched to ruby
 
 v2.0.1
 
