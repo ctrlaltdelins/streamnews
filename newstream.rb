@@ -1,12 +1,13 @@
 #!/usr/bin/ruby
 require 'yaml'
 require 'feedjira'
+require 'digest'
 require 'sqlite3'
 require 'colorize'
-require 'net/http'
 Feedjira.logger.level = Logger::FATAL
 FILECONF = "#{Dir.home}/.newstream.conf"
 $conf
+$lastpublished
 
 def help()
   puts "usage:"
@@ -69,6 +70,46 @@ def list()
   $conf[:sources].each { |source| puts source[:name] + ": " + source[:url] }
 end
 
+def display(row)
+  d = Time.parse(row[0])
+  if $lastpublished == nil
+    $lastpublished = d
+  end
+  if d > $lastpublished
+    line = "#{d.strftime('%H:%M:%S')}".light_black+" [#{row[1]}]".cyan+" #{row[2]}"
+    puts line
+    $lastpublished = d
+  end
+end
+
+def retrieve()
+  $db = SQLite3::Database.new ":memory:"
+  $db.execute "CREATE TABLE IF NOT EXISTS news(ID INTEGER PRIMARY KEY, SOURCE TEXT, TITLE TEXT, DATETIME DATETIME)"
+
+  for source in $conf[:sources]
+    feed = Feedjira::Feed.fetch_and_parse source[:url]
+    feed.entries.each { |item|
+      hash = Digest::SHA2.hexdigest item.title
+      stm = $db.prepare "INSERT INTO news (SOURCE, TITLE, DATETIME) VALUES (?, ?, ?)"
+      stm.bind_param 1, source[:name]
+      stm.bind_param 2, item.title
+      stm.bind_param 3, item.published.utc.strftime('%Y-%m-%d %H:%M:%S')
+      rs = stm.execute
+      stm.close if stm
+    }
+  end
+
+  stm = $db.prepare "SELECT DATETIME, SOURCE, TITLE FROM news ORDER BY DATETIME" 
+  rs = stm.execute 
+
+  rs.each do |row|
+    display(row)
+  end
+
+  stm.close if stm
+  $db.close if $db
+end
+
 def stream()
 
   puts " _____ _____ _ _ _ _____ _____ _____ _____ _____ _____ ".yellow
@@ -79,42 +120,22 @@ def stream()
 
   $conf = checkFileConf()
 
-  begin
-    db = SQLite3::Database.new ":memory:"
-    db.execute "CREATE TABLE IF NOT EXISTS news(ID INTEGER PRIMARY KEY, SOURCE TEXT, TITLE TEXT, DATETIME DATETIME)"
-
-    for source in $conf[:sources]
-      uri = URI(source[:url])
-      xml = Net::HTTP.get_response(uri)
-      # feed = Feedjira::Feed.fetch_and_parse source[:url]
-      # feed.entries.each { |item|
-      #   stm = db.prepare "INSERT INTO news (SOURCE, TITLE, DATETIME) VALUES (?, ?, ?)"
-      #   stm.bind_param 1, source[:name]
-      #   stm.bind_param 2, item.title
-      #   stm.bind_param 3, item.published.utc.strftime('%Y-%m-%d %H:%M:%S')
-      #   rs = stm.execute
-      #   stm.close if stm
-      # }
-    end
-
-    stm = db.prepare "SELECT DATETIME, SOURCE, TITLE FROM news ORDER BY DATETIME" 
-    rs = stm.execute 
-    
-    rs.each do |row|
-      d = Time.parse(row[0])
-      puts "#{d.strftime('%H:%M:%S')} [#{row[1]}] #{row[2]}" 
-    end
-
-  rescue SQLite3::Exception => e 
-    puts "Database error"
-    puts e
-      
-  ensure
-    stm.close if stm
-    db.close if db
+  while 1
+    retrieve()
+    sleep 10
   end
 
 end
+
+def shut_down
+  $db.close if $db
+  puts "\nExiting Newstream".green
+end
+
+Signal.trap("INT") { 
+  shut_down
+  exit
+}
 
 cmd, *options = ARGV
 
