@@ -1,1 +1,8 @@
-theme: jekyll-theme-minimal
+remote_theme: ctrlaltdev/ctrlaltdev-theme
+theme_settings:
+  title: "Newstream"
+  description: "News streaming in your terminal"
+  
+sass:
+  sass_dir: _sass
+style: :compressed
