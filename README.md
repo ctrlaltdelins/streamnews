@@ -1,6 +1,6 @@
-[![GitHub tag](https://img.shields.io/github/tag/ctrlaltdev/newstream.svg?style=flat-square)](https://github.com/ctrlaltdev/newstream/tags)
-[![GitHub release](https://img.shields.io/github/release/ctrlaltdev/newstream.svg?style=flat-square)](https://github.com/ctrlaltdev/newstream/releases)
-[![I love badges](https://img.shields.io/badge/I%20love-badges-FF00FF.svg?style=flat-square)](https://shields.io)
+[![GitHub release](https://img.shields.io/github/release/ctrlaltdev/newstream.svg?style=for-the-badge)](https://github.com/ctrlaltdev/newstream/releases)
+[![licence](https://img.shields.io/github/license/ctrlaltdev/newstream.svg?style=for-the-badge)](https://github.com/ctrlaltdev/newstream/blob/master/LICENCE.md)
+![Ruby](https://img.shields.io/badge/_-Ruby-B02B2C.svg?style=for-the-badge)
 
 ### newstream
 Stream news in a terminal.
