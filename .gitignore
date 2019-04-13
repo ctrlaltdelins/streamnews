@@ -1,3 +1,5 @@
+vendor
+
 # =========================
 # Operating System Files
 # =========================
@@ -47,4 +49,4 @@ $RECYCLE.BIN/
 *.msp
 
 # Windows shortcuts
-*.lnk
+*.lnkvendor

@@ -1,8 +1,0 @@
-remote_theme: ctrlaltdev/ctrlaltdev-theme
-theme_settings:
-  title: "Newstream"
-  description: "News streaming in your terminal"
-github: "ctrlaltdev/newstream"
-sass:
-  sass_dir: _sass
-  style: :compressed
